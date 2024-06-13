@@ -25,6 +25,26 @@ class _StatefulParentAndChildState extends State<StatefulParentAndChild> {
     });
   }
 
+  int x = 4, y = 2;
+  num newV = 0;
+  multiply() {
+    num z = (x * y * _parentValue++);
+    setState(() {
+      newV = z;
+    });
+    print(newV);
+  }
+
+  delayedIncrement() async {
+    await Future.delayed(const Duration(seconds: 10));
+    print("Async finished");
+    if (mounted) {
+      setState(() {
+        newV = 9999;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,10 +55,11 @@ class _StatefulParentAndChildState extends State<StatefulParentAndChild> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Parent Value: $_parentValue'),
+            Text('Parent Value: $newV'),
             StatefulChild(),
             ElevatedButton(
-              onPressed: _incrementParent,
+              onPressed: delayedIncrement,
+              //_incrementParent,
               child: const Text('Increment Parent'),
             ),
           ],

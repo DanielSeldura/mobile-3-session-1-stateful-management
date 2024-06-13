@@ -1,5 +1,3 @@
-import "dart:async";
-
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:state_change_demo/src/screens/index.screen.dart";
@@ -71,7 +69,7 @@ class GlobalRouter {
             builder: (context, _) {
               return const IndexScreen();
             },
-            routes:  [
+            routes: [
               GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
                   path: SimpleCounterScreen.route,
@@ -84,35 +82,35 @@ class GlobalRouter {
                   path: SimpleCounterScreenWithInitialValue.route,
                   name: SimpleCounterScreenWithInitialValue.name,
                   builder: (context, _) {
-                    return  const SimpleCounterScreenWithInitialValue(initialValue:10);
+                    return const SimpleCounterScreenWithInitialValue(initialValue: 10);
                   }),
               GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
                   path: StatefulParent.route,
                   name: StatefulParent.name,
                   builder: (context, _) {
-                    return  const StatefulParent();
+                    return const StatefulParent();
                   }),
               GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
                   path: StatefulParentAndChild.route,
                   name: StatefulParentAndChild.name,
                   builder: (context, _) {
-                    return  const StatefulParentAndChild();
+                    return const StatefulParentAndChild();
                   }),
               GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
                   path: KeyExample.route,
                   name: KeyExample.name,
                   builder: (context, _) {
-                    return  const KeyExample();
+                    return const KeyExample();
                   }),
               GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
                   path: NoKeyExample.route,
                   name: NoKeyExample.name,
                   builder: (context, _) {
-                    return  const NoKeyExample();
+                    return const NoKeyExample();
                   }),
               // GoRoute(
               //     parentNavigatorKey: _rootNavigatorKey,
