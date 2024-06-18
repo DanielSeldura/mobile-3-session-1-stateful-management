@@ -4,7 +4,7 @@ class SimpleCounterScreen extends StatefulWidget {
   /// "simple-counter"
   static const String route = 'simple-counter-2';
 
-  /// "simple-counter"
+  /// "/simple-counter"
   static const String path = '/simple-counter-2';
 
   /// "Simple Counter Screen"
