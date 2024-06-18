@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class StatefulParent extends StatefulWidget {
-
   /// "stateful-parent"
   static const String route = 'stateful-parent';
 
@@ -28,6 +27,7 @@ class _StatefulParentState extends State<StatefulParent> {
 
   @override
   Widget build(BuildContext context) {
+    print("Stateful parent build");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stateful Parent'),
@@ -55,6 +55,7 @@ class StatelessChild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('stateless child build');
     return Text('Value: $value');
   }
 }

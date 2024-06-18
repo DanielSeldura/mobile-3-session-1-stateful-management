@@ -7,6 +7,8 @@ import 'package:state_change_demo/src/screens/simple_counter_with_initial_value.
 import 'package:state_change_demo/src/screens/stfulP_stfulP.dart';
 import 'package:state_change_demo/src/screens/stfulP_stlssC.dart';
 
+import '../routing/router.dart';
+
 class IndexScreen extends StatelessWidget {
   /// "/"
   static const String route = '/';
@@ -30,14 +32,17 @@ class IndexScreen extends StatelessWidget {
               children: [
                 ListTile(
                   onTap: () {
-                    GoRouter.of(context).push(SimpleCounterScreen.path);
+                    GlobalRouter.I.router.push(SimpleCounterScreen.path);
+
+                    /// /simple-counter
                   },
                   title: const Text(SimpleCounterScreen.name),
                   trailing: const Icon(Icons.chevron_right),
                 ),
                 ListTile(
                   onTap: () {
-                    GoRouter.of(context).push(SimpleCounterScreenWithInitialValue.path);
+                    GoRouter.of(context)
+                        .push(SimpleCounterScreenWithInitialValue.path);
                   },
                   title: const Text(SimpleCounterScreenWithInitialValue.name),
                   trailing: const Icon(Icons.chevron_right),
