@@ -11,6 +11,7 @@ import "package:state_change_demo/src/screens/home/wrapper.dart";
 import "package:state_change_demo/src/screens/index.screen.dart";
 import "package:state_change_demo/src/screens/key_example.dart";
 import "package:state_change_demo/src/screens/no_key_example.dart";
+import "package:state_change_demo/src/screens/see_all_post.dart";
 import "package:state_change_demo/src/screens/simple_counter.screen.dart";
 import "package:state_change_demo/src/screens/simple_counter_with_initial_value.screen.dart";
 import "package:state_change_demo/src/screens/stfulP_stfulP.dart";
@@ -143,6 +144,13 @@ class GlobalRouter {
                     name: NoKeyExample.name,
                     builder: (context, _) {
                       return const NoKeyExample();
+                    }),
+                GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: SeeAllPost.route,
+                    name: SeeAllPost.name,
+                    builder: (context, _) {
+                      return const SeeAllPost();
                     }),
               ]),
         ]);

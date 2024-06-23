@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:state_change_demo/src/screens/key_example.dart';
 import 'package:state_change_demo/src/screens/no_key_example.dart';
+import 'package:state_change_demo/src/screens/see_all_post.dart';
 import 'package:state_change_demo/src/screens/simple_counter.screen.dart';
 import 'package:state_change_demo/src/screens/simple_counter_with_initial_value.screen.dart';
 import 'package:state_change_demo/src/screens/stfulP_stfulP.dart';
@@ -73,6 +74,13 @@ class IndexScreen extends StatelessWidget {
                     GoRouter.of(context).push(NoKeyExample.path);
                   },
                   title: const Text(NoKeyExample.name),
+                  trailing: const Icon(Icons.chevron_right),
+                ),
+                ListTile(
+                  onTap: () {
+                    GoRouter.of(context).push(SeeAllPost.path);
+                  },
+                  title: const Text(SeeAllPost.name),
                   trailing: const Icon(Icons.chevron_right),
                 ),
               ],
