@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "949802881102",
+    "project_id": "seldura-firebase-demo",
+    "storage_bucket": "seldura-firebase-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949802881102:android:8317d39a10e58c4ef7331f",
+        "android_client_info": {
+          "package_name": "com.example.state_change_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8eCLjgh_jq8B9UbjZwWhTG7jkyWNgE1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
