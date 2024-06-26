@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 24),
+          margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           height: 52,
           child: ElevatedButton(
             onPressed: () {
