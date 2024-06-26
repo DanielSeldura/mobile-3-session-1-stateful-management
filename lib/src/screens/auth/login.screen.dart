@@ -24,8 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    username = TextEditingController();
-    password = TextEditingController();
+    username = TextEditingController(text: "daniel+firebase@usjr.edu.ph");
+    password = TextEditingController(text: "12345678ABCabc!");
     usernameFn = FocusNode();
     passwordFn = FocusNode();
   }
@@ -83,9 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           errorText: 'Please fill out the username'),
                       MaxLengthValidator(32,
                           errorText: "Username cannot exceed 32 characters"),
-                      PatternValidator(r'^[a-zA-Z0-9 ]+$',
-                          errorText:
-                              'Username cannot contain special characters'),
+                      EmailValidator(errorText: "Please select a valid email"),
                     ]).call,
                   ),
                 ),
