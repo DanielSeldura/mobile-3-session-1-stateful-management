@@ -30,8 +30,8 @@ class AuthController with ChangeNotifier {
   );
 
   final GitHubSignIn gitHubSignIn = GitHubSignIn(
-      clientId: "Ov23licDtW1pAVn6h0Zv",
-      clientSecret: "ce7fef78bf6d3c07dfff464b80cbc3844d7446d2",
+      clientId: const String.fromEnvironment("GHCLIENT"),
+      clientSecret: const String.fromEnvironment("GHSECRET"),
       redirectUrl:
           "https://seldura-firebase-demo.firebaseapp.com/__/auth/handler");
 
@@ -74,7 +74,6 @@ class AuthController with ChangeNotifier {
 
   signInWithGithub(BuildContext context) async {
     GitHubSignInResult gitHubSignin = await gitHubSignIn.signIn(context);
-
     if (gitHubSignin.token == null) {
       throw Exception("No Signed in account / token is null");
     }
