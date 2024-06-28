@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:github_sign_in_plus/github_sign_in_plus.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:state_change_demo/src/enum/enum.dart';
 
 class AuthController with ChangeNotifier {
@@ -19,6 +21,19 @@ class AuthController with ChangeNotifier {
   late StreamSubscription<User?> currentAuthedUser;
 
   AuthState state = AuthState.unauthenticated;
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
+  final GitHubSignIn gitHubSignIn = GitHubSignIn(
+      clientId: "Ov23licDtW1pAVn6h0Zv",
+      clientSecret: "ce7fef78bf6d3c07dfff464b80cbc3844d7446d2",
+      redirectUrl:
+          "https://seldura-firebase-demo.firebaseapp.com/__/auth/handler");
 
   listen() {
     currentAuthedUser =
@@ -46,8 +61,33 @@ class AuthController with ChangeNotifier {
     // User? user  = userCredential.user;
   }
 
+  signInWithGoogle() async {
+    GoogleSignInAccount? gSign = await _googleSignIn.signIn();
+    if (gSign == null) throw Exception("No Signed in account");
+    GoogleSignInAuthentication googleAuth = await gSign.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  signInWithGithub(BuildContext context) async {
+    GitHubSignInResult gitHubSignin = await gitHubSignIn.signIn(context);
+
+    if (gitHubSignin.token == null) {
+      throw Exception("No Signed in account / token is null");
+    }
+    final OAuthCredential credential =
+        GithubAuthProvider.credential(gitHubSignin.token!);
+    FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
   ///write code to log out the user and add it to the home page.
   logout() {
+    if (_googleSignIn.currentUser != null) {
+      _googleSignIn.signOut();
+    }
     return FirebaseAuth.instance.signOut();
   }
 

@@ -83,66 +83,91 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Form(
             key: formKey,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Flexible(
-                  child: TextFormField(
-                    decoration: decoration.copyWith(
-                        labelText: "Username",
-                        prefixIcon: const Icon(Icons.person)),
-                    focusNode: usernameFn,
-                    controller: username,
-                    onEditingComplete: () {
-                      passwordFn.requestFocus();
-                    },
-                    validator: MultiValidator([
-                      RequiredValidator(
-                          errorText: 'Please fill out the username'),
-                      MaxLengthValidator(32,
-                          errorText: "Username cannot exceed 32 characters"),
-                      EmailValidator(errorText: "Please select a valid email"),
-                    ]).call,
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Flexible(
-                  child: TextFormField(
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: obfuscate,
-                    decoration: decoration.copyWith(
-                        labelText: "Password",
-                        prefixIcon: const Icon(Icons.password),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                obfuscate = !obfuscate;
-                              });
-                            },
-                            icon: Icon(obfuscate
-                                ? Icons.remove_red_eye_rounded
-                                : CupertinoIcons.eye_slash))),
-                    focusNode: passwordFn,
-                    controller: password,
-                    onEditingComplete: () {
-                      passwordFn.unfocus();
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Flexible(
+                        child: TextFormField(
+                          decoration: decoration.copyWith(
+                              labelText: "Username",
+                              prefixIcon: const Icon(Icons.person)),
+                          focusNode: usernameFn,
+                          controller: username,
+                          onEditingComplete: () {
+                            passwordFn.requestFocus();
+                          },
+                          validator: MultiValidator([
+                            RequiredValidator(
+                                errorText: 'Please fill out the username'),
+                            MaxLengthValidator(32,
+                                errorText:
+                                    "Username cannot exceed 32 characters"),
+                            EmailValidator(
+                                errorText: "Please select a valid email"),
+                          ]).call,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Flexible(
+                        child: TextFormField(
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: obfuscate,
+                          decoration: decoration.copyWith(
+                              labelText: "Password",
+                              prefixIcon: const Icon(Icons.password),
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      obfuscate = !obfuscate;
+                                    });
+                                  },
+                                  icon: Icon(obfuscate
+                                      ? Icons.remove_red_eye_rounded
+                                      : CupertinoIcons.eye_slash))),
+                          focusNode: passwordFn,
+                          controller: password,
+                          onEditingComplete: () {
+                            passwordFn.unfocus();
 
-                      ///call submit maybe?
-                    },
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: "Password is required"),
-                      MinLengthValidator(12,
-                          errorText:
-                              "Password must be at least 12 characters long"),
-                      MaxLengthValidator(128,
-                          errorText: "Password cannot exceed 72 characters"),
-                      PatternValidator(
-                          r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
-                          errorText:
-                              'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.')
-                    ]).call,
+                            ///call submit maybe?
+                          },
+                          validator: MultiValidator([
+                            RequiredValidator(
+                                errorText: "Password is required"),
+                            MinLengthValidator(12,
+                                errorText:
+                                    "Password must be at least 12 characters long"),
+                            MaxLengthValidator(128,
+                                errorText:
+                                    "Password cannot exceed 72 characters"),
+                            PatternValidator(
+                                r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
+                                errorText:
+                                    'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.')
+                          ]).call,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    WaitingDialog.show(context,
+                        future: AuthController.I.signInWithGoogle());
+                  },
+                  child: const Text("Continue with Google"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    AuthController.I.signInWithGithub(context);
+                  },
+                  child: const Text("Continue with GitHub"),
                 ),
               ],
             ),
