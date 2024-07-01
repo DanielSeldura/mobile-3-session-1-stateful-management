@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:state_change_demo/src/controllers/auth_controller.dart';
@@ -26,8 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    username = TextEditingController(text: "daniel+firebase@usjr.edu.ph");
-    password = TextEditingController(text: "12345678ABCabc!");
+    username = TextEditingController(text: kDebugMode?"daniel+firebase@usjr.edu.ph":"");
+    password = TextEditingController(text: kDebugMode?"12345678ABCabc!":"");
     usernameFn = FocusNode();
     passwordFn = FocusNode();
   }
@@ -163,12 +164,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: const Text("Continue with Google"),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    AuthController.I.signInWithGithub(context);
-                  },
-                  child: const Text("Continue with GitHub"),
-                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     AuthController.I.signInWithGithub(context);
+                //   },
+                //   child: const Text("Continue with GitHub"),
+                // ),
               ],
             ),
           ),

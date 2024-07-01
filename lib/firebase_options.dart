@@ -47,20 +47,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAEEQ5hYuEBM_JvtTc6TwTbPslrsphhv_w',
-    appId: '1:949802881102:web:b029ff1a45380d23f7331f',
-    messagingSenderId: '949802881102',
-    projectId: 'seldura-firebase-demo',
-    authDomain: 'seldura-firebase-demo.firebaseapp.com',
-    storageBucket: 'seldura-firebase-demo.appspot.com',
+    apiKey: 'AIzaSyA3SktgqqBU3DdOAQ0QiH_I9SgxteAw1Mo',
+    appId: '1:627608284269:web:b0a9da2c98c2b70e7fe364',
+    messagingSenderId: '627608284269',
+    projectId: 'seldura-firestore-demo',
+    authDomain: 'seldura-firestore-demo.firebaseapp.com',
+    storageBucket: 'seldura-firestore-demo.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC8eCLjgh_jq8B9UbjZwWhTG7jkyWNgE1s',
-    appId: '1:949802881102:android:8317d39a10e58c4ef7331f',
-    messagingSenderId: '949802881102',
-    projectId: 'seldura-firebase-demo',
-    storageBucket: 'seldura-firebase-demo.appspot.com',
+    apiKey: 'AIzaSyB25_ZMqdwyCOtLU2TkKLbs2dToz6hkAg4',
+    appId: '1:627608284269:android:74931eb876f2c8da7fe364',
+    messagingSenderId: '627608284269',
+    projectId: 'seldura-firestore-demo',
+    storageBucket: 'seldura-firestore-demo.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

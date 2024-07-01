@@ -1,11 +1,16 @@
 import 'dart:typed_data';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:state_change_demo/src/controllers/auth_controller.dart';
+import 'package:state_change_demo/src/controllers/user_data_controller.dart';
 import 'package:state_change_demo/src/dialogs/waiting_dialog.dart';
+import 'package:state_change_demo/src/services/firestore_service.dart';
+
+import '../../models/user.model.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String route = '/home';
@@ -36,10 +41,99 @@ class HomeScreen extends StatelessWidget {
       body: const SafeArea(
         child: Center(
           child: Column(
-            children: [Expanded(child: ImageUploadWidget())],
+            children: [
+              Center(
+                child: UserProfileScreen(),
+              )
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class UserProfileScreen extends StatefulWidget {
+  const UserProfileScreen({super.key});
+
+  @override
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  Map<String, dynamic>? user;
+  late UserDataController userDataController;
+  @override
+  void initState() {
+    super.initState();
+    userDataController = UserDataController();
+    userDataController
+        .listen(FirebaseAuth.instance.currentUser?.uid ?? 'unknown');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.person),
+          onPressed: () async {
+            user = await WaitingDialog.show<Map<String, dynamic>?>(context,
+                future: FirestoreService.getUser(
+                    FirebaseAuth.instance.currentUser?.uid ?? 'unknown'));
+            setState(() {});
+          },
+        ),
+        if (user != null)
+          Text(
+            user.toString(),
+            textAlign: TextAlign.center,
+          ),
+        ListenableBuilder(
+            listenable: userDataController,
+            builder: (context, _) {
+              return Text(
+                userDataController.userData.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.blueAccent),
+              );
+            }),
+        const SizedBox(
+          height: 72,
+        ),
+        ValueListenableBuilder<UserModel?>(
+            valueListenable: userDataController.userModelNotifier,
+            builder: (context, user, _) {
+              if (user == null) {
+                return const Text(
+                  "DataModel is null!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.blueAccent),
+                );
+              }
+              return Text(
+                user.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.blueAccent),
+              );
+            }),
+
+        IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              try {
+                UserModel model1 =
+                    UserModel(uid: "uid", siblings: const ["A", "B", "C"]);
+                UserModel model2 =
+                    UserModel(uid: "uid", siblings: const ["A", "2", "C"]);
+                print(model1 == model2);
+              } catch (e) {
+                print(e);
+              }
+            }),
+      ],
     );
   }
 }

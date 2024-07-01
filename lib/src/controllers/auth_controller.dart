@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:state_change_demo/src/enum/enum.dart';
+import 'package:state_change_demo/src/services/firestore_service.dart';
 
 class AuthController with ChangeNotifier {
   // Static method to initialize the singleton in GetIt
@@ -45,6 +46,7 @@ class AuthController with ChangeNotifier {
       state = AuthState.unauthenticated;
     } else {
       state = AuthState.authenticated;
+      FirestoreService.storeUser(user.email ?? "No email available", user.uid);
     }
     notifyListeners();
   }
