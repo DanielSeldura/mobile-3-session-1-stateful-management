@@ -10,7 +10,7 @@ import 'package:state_change_demo/src/controllers/user_data_controller.dart';
 import 'package:state_change_demo/src/dialogs/waiting_dialog.dart';
 import 'package:state_change_demo/src/services/firestore_service.dart';
 
-import '../../models/user.model.dart';
+import '../../models/user2.model.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String route = '/home';
@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Home"),
+        title: const Text("Home"),
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
