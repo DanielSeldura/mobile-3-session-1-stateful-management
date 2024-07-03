@@ -77,7 +77,7 @@ class Company extends Equatable {
       'Company(name: $name, catchPhrase: $catchPhrase, bs: $bs)';
 }
 
-class User extends Equatable {
+class UserExampleModel extends Equatable {
   final int id;
   final String name;
   final String username;
@@ -87,7 +87,7 @@ class User extends Equatable {
   final String website;
   final Company company;
 
-  const User({
+  const UserExampleModel({
     required this.id,
     required this.name,
     required this.username,
@@ -98,8 +98,8 @@ class User extends Equatable {
     required this.company,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory UserExampleModel.fromJson(Map<String, dynamic> json) {
+    return UserExampleModel(
       id: json['id'],
       name: json['name'],
       username: json['username'],
