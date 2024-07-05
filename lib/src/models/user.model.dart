@@ -16,6 +16,10 @@ class Geo extends Equatable {
   @override
   List<Object> get props => [lat, lng];
 
+  Map<String, dynamic> toJson() {
+    return {"lat": lat, "lng": lng};
+  }
+
   @override
   String toString() => 'Geo(lat: $lat, lng: $lng)';
 }
@@ -43,6 +47,16 @@ class Address extends Equatable {
       zipcode: json['zipcode'],
       geo: Geo.fromJson(json['geo']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "street": street,
+      "suite": suite,
+      "city": city,
+      "zipcode": zipcode,
+      "geo": geo.toJson()
+    };
   }
 
   @override
@@ -75,6 +89,10 @@ class Company extends Equatable {
   @override
   String toString() =>
       'Company(name: $name, catchPhrase: $catchPhrase, bs: $bs)';
+
+  Map<String, dynamic> toJson() {
+    return {"name": name, "catchPhrase": catchPhrase, "bs": bs};
+  }
 }
 
 class UserExampleModel extends Equatable {
@@ -109,6 +127,19 @@ class UserExampleModel extends Equatable {
       website: json['website'],
       company: Company.fromJson(json['company']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "username": username,
+      "email": email,
+      "address": address.toJson(),
+      "phone": phone,
+      "website": website,
+      "company": company.toJson(),
+    };
   }
 
   @override
