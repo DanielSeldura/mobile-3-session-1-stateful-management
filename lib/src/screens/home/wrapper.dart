@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:state_change_demo/src/screens/home/home.screen.dart';
 
 import '../../routing/router.dart';
