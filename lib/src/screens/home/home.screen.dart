@@ -1,19 +1,7 @@
-import 'dart:typed_data';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:state_change_demo/src/controllers/auth_controller.dart';
-import 'package:state_change_demo/src/controllers/user_data_controller.dart';
 import 'package:state_change_demo/src/dialogs/waiting_dialog.dart';
-import 'package:state_change_demo/src/screens/demos/rest_demo.screen.dart';
 import 'package:state_change_demo/src/screens/home/queries_demo.screen.dart';
-import 'package:state_change_demo/src/screens/home/user_profile.screen.dart';
-import 'package:state_change_demo/src/services/firestore_service.dart';
-
-import '../../models/user2.model.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String route = '/home';
@@ -43,9 +31,53 @@ class HomeScreen extends StatelessWidget {
       ),
       body: const SafeArea(
         // child: UserProfileScreen()
-        child: QueriesDemo(),
+        child: ProgrammaticallyScrollToIndexedItem(),
       ),
     );
   }
 }
 
+
+
+class ProgrammaticallyScrollToIndexedItem extends StatefulWidget {
+  const ProgrammaticallyScrollToIndexedItem({super.key});
+
+  @override
+  State<ProgrammaticallyScrollToIndexedItem> createState() =>
+      _ProgrammaticallyScrollToIndexedItemState();
+}
+
+class _ProgrammaticallyScrollToIndexedItemState
+    extends State<ProgrammaticallyScrollToIndexedItem> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text("Scroll to "),
+          onTap: () {
+            Scrollable.ensureVisible(GlobalObjectKey(9).currentContext!,
+                duration: const Duration(milliseconds: 250));
+          },
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (int i = 1; i < 200; i++)
+                  Container(
+                    key: GlobalObjectKey(i),
+                    padding: const EdgeInsets.all(24),
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    color: i % 2 == 0 ? Colors.grey : Colors.orangeAccent,
+                    child: Center(child: Text("Item $i")),
+                  )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
