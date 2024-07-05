@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
@@ -256,6 +257,19 @@ class UserController with ChangeNotifier {
 
   Future<void> storeExampleUsersInFirestore() async {
     Map<String, UserExampleModel> usersToUpload = await getUsers();
+    for (MapEntry<String, UserExampleModel> user in usersToUpload.entries) {
+      Map<String, dynamic> payload = {
+        ...user.value.toJson(),
+        "documentWriter": FirebaseFirestore.instance
+            .collection("users")
+            .doc("EGwcoirJMZcoYAGn4cV65bcSHjs2")
+      };
+
+      await FirebaseFirestore.instance
+          .collection("exampleUsers")
+          .doc(user.key)
+          .set(payload, SetOptions(merge: true));
+    }
   }
 
   clear() {
