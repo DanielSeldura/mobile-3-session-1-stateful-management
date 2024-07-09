@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:state_change_demo/src/controllers/auth_controller.dart';
-import 'package:state_change_demo/src/dialogs/waiting_dialog.dart';
 
 class WordShuffleScreen extends StatelessWidget {
+  static const String route = "/wordShuffle";
+  static const String name = "Word Shuffle";
   const WordShuffleScreen({super.key});
 
   @override
@@ -20,13 +18,8 @@ class WordShuffleScreen extends StatelessWidget {
 
 List<T> scramble<T>(Iterable<T> items) {
   List<T> list = items.toList();
-  Random random = Random();
-  for (int i = list.length - 1; i > 0; i--) {
-    int j = random.nextInt(i + 1);
-    T temp = list[i];
-    list[i] = list[j];
-    list[j] = temp;
-  }
+  list.shuffle();
+
   return list;
 }
 
@@ -37,16 +30,20 @@ class WordShuffle extends StatefulWidget {
   State<WordShuffle> createState() => _WordShuffleState();
 }
 
+///bug 1 shuffle is overwriting letters DONE
+///bug 2, moving letters from row1 entry to row2 entry messes something up??? DONE
+
 class _WordShuffleState extends State<WordShuffle> {
   late String finalWord;
   late List<String> words;
+  List<String> submittedWords = [];
   late Map<int, String?> tiles;
   late Map<int, String?> tileDestinations;
 
   @override
   void initState() {
     super.initState();
-    finalWord = 'adventure';
+    finalWord = 'adventure'.toUpperCase();
     words = [
       "advent",
       "adventure",
@@ -77,22 +74,25 @@ class _WordShuffleState extends State<WordShuffle> {
       "true",
       "rue",
       "urn",
+      "van",
       "vent",
       "venture"
-    ];
-    tiles = {for (int i = 0; i < finalWord.characters.length; i++) i: scramble(finalWord.characters).elementAt(i)};
+    ].map((e) => e.toUpperCase()).where((e) => e.length >= 4).toList();
+    List<String> initialScramble = scramble(finalWord.characters).map((e) => e.toString()).toList();
+    print(initialScramble);
+    tiles = {for (int i = 0; i < finalWord.characters.length; i++) i: initialScramble.elementAt(i)};
     tileDestinations = {for (int i = 0; i < finalWord.characters.length; i++) i: null};
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-            children: [Text("Words: 0/${words.length}")],
+            children: [Text("Words: ${submittedWords.length}/${words.length}")],
           ),
           AspectRatio(
             aspectRatio: 1,
@@ -101,22 +101,7 @@ class _WordShuffleState extends State<WordShuffle> {
               child: Wrap(
                 runSpacing: 8,
                 spacing: 16,
-                children: [
-                  for (String word in words)
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (String letter in word.characters)
-                          Container(
-                            height: 20,
-                            width: 20,
-                            margin: const EdgeInsets.only(right: 2),
-                            decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(4)),
-                            child: Center(child: Text(letter.toUpperCase())),
-                          )
-                      ],
-                    )
-                ],
+                children: [for (String word in words) buildValidWord(word, submittedWords.contains(word))],
               ),
             ),
           ),
@@ -128,18 +113,23 @@ class _WordShuffleState extends State<WordShuffle> {
               crossAxisSpacing: 4,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                for (MapEntry<int, String?> tile in tileDestinations.entries)
+                for (MapEntry<int, String?> tileD in tileDestinations.entries)
                   LayoutBuilder(builder: (context, constraints) {
-                    if (tile.value == null) {
-                      return DragTarget<MapEntry<int, String?>>(
+                    if (tileD.value == null) {
+                      return DragTarget<(bool, MapEntry<int, String?>)>(
                         onWillAcceptWithDetails: (details) {
-                          return tile.value == null;
+                          return tileD.value == null;
                         },
                         onAcceptWithDetails: (acceptDetails) {
                           if (mounted) {
                             setState(() {
-                              tileDestinations[tile.key] = acceptDetails.data.value;
-                              tiles[acceptDetails.data.key] = null;
+                              if (acceptDetails.data.$1 == true) {
+                                tileDestinations[tileD.key] = acceptDetails.data.$2.value;
+                                tileDestinations[acceptDetails.data.$2.key] = null;
+                              } else {
+                                tileDestinations[tileD.key] = acceptDetails.data.$2.value;
+                                tiles[acceptDetails.data.$2.key] = null;
+                              }
                             });
                           }
                         },
@@ -156,12 +146,12 @@ class _WordShuffleState extends State<WordShuffle> {
                         },
                       );
                     }
-                    return Draggable<MapEntry<int, String?>>(
-                      data: tile,
+                    return Draggable<(bool, MapEntry<int, String?>)>(
+                      data: (true, tileD), // (String,int,Text)
                       feedback: Container(
                         constraints: constraints,
                         decoration: BoxDecoration(color: Colors.white, border: Border.all(), borderRadius: BorderRadius.circular(4)),
-                        child: Center(child: Text(tile.value ?? '')),
+                        child: Center(child: Text(tileD.value ?? '')),
                       ),
                       childWhenDragging: Container(
                         constraints: constraints,
@@ -175,12 +165,16 @@ class _WordShuffleState extends State<WordShuffle> {
                       child: Container(
                         constraints: constraints,
                         decoration: BoxDecoration(color: Colors.white, border: Border.all(), borderRadius: BorderRadius.circular(4)),
-                        child: Center(child: Text(tile.value ?? '')),
+                        child: Center(child: Text(tileD.value ?? '')),
                       ),
                     );
                   }),
               ],
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [IconButton(onPressed: resetInput, icon: const Icon(Icons.arrow_downward))],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -197,15 +191,20 @@ class _WordShuffleState extends State<WordShuffle> {
                 for (MapEntry<int, String?> tile in tiles.entries)
                   LayoutBuilder(builder: (context, constraints) {
                     if (tile.value == null) {
-                      return DragTarget<MapEntry<int, String?>>(
+                      return DragTarget<(bool, MapEntry<int, String?>)>(
                         onWillAcceptWithDetails: (details) {
                           return tile.value == null;
                         },
                         onAcceptWithDetails: (acceptDetails) {
                           if (mounted) {
                             setState(() {
-                              tiles[tile.key] = acceptDetails.data.value;
-                              tileDestinations[acceptDetails.data.key] = null;
+                              if (acceptDetails.data.$1 == false) {
+                                tiles[tile.key] = acceptDetails.data.$2.value;
+                                tiles[acceptDetails.data.$2.key] = null;
+                              } else {
+                                tiles[tile.key] = acceptDetails.data.$2.value;
+                                tileDestinations[acceptDetails.data.$2.key] = null;
+                              }
                             });
                           }
                         },
@@ -222,8 +221,8 @@ class _WordShuffleState extends State<WordShuffle> {
                         },
                       );
                     }
-                    return Draggable<MapEntry<int, String?>>(
-                      data: tile,
+                    return Draggable<(bool, MapEntry<int, String?>)>(
+                      data: (false, tile),
                       feedback: Container(
                         constraints: constraints,
                         decoration: BoxDecoration(color: Colors.white, border: Border.all(), borderRadius: BorderRadius.circular(4)),
@@ -238,10 +237,13 @@ class _WordShuffleState extends State<WordShuffle> {
                             color: Colors.grey.withOpacity(0.7),
                             borderRadius: BorderRadius.circular(4)),
                       ),
-                      child: Container(
-                        constraints: constraints,
-                        decoration: BoxDecoration(color: Colors.white, border: Border.all(), borderRadius: BorderRadius.circular(4)),
-                        child: Center(child: Text(tile.value ?? '')),
+                      child: GestureDetector(
+                        onTap: () => handleOnTap(tile),
+                        child: Container(
+                          constraints: constraints,
+                          decoration: BoxDecoration(color: Colors.white, border: Border.all(), borderRadius: BorderRadius.circular(4)),
+                          child: Center(child: Text(tile.value ?? '')),
+                        ),
                       ),
                     );
                   }),
@@ -253,16 +255,76 @@ class _WordShuffleState extends State<WordShuffle> {
               margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               height: 52,
               child: ElevatedButton(
-                onPressed: () {
-                  WaitingDialog.show(context, future: AuthController.I.logout());
-                },
-                child: const Text("Sign out"),
+                onPressed: isValidWord() ? handleSubmit : null,
+                child: Text(currentWord().isNotEmpty ? currentWord() : "NO WORD"),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Row buildValidWord(String word, [bool visible = false]) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (String letter in word.characters)
+          Container(
+            height: 20,
+            width: 20,
+            margin: const EdgeInsets.only(right: 2),
+            decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(4)),
+            child: Center(child: Text(visible ? letter : '')),
+          )
+      ],
+    );
+  }
+
+  void handleSubmit() {
+    submittedWords.add(currentWord());
+    submittedWords = Set<String>.from(submittedWords).toList();
+    resetInput();
+  }
+
+  void resetInput() {
+    for (MapEntry<int, String?> mapEntry in tileDestinations.entries) {
+      if (mapEntry.value == null) continue;
+      for (MapEntry<int, String?> handEntry in tiles.entries) {
+        if (handEntry.value != null) continue;
+        tiles[handEntry.key] = mapEntry.value;
+        tileDestinations[mapEntry.key] = null;
+        break;
+      }
+    }
+    setState(() {});
+  }
+
+  handleOnTap(MapEntry<int, String?> tile) {
+    if (tile.value == null) return;
+    for (MapEntry<int, String?> mapEntry in tileDestinations.entries) {
+      if (mapEntry.value != null) continue;
+      tileDestinations[mapEntry.key] = tile.value;
+      tiles[tile.key] = null;
+      break;
+    }
+    setState(() {});
+  }
+
+  String currentWord() => tileDestinations.values.map((e) => e ?? ' ').join("").trim();
+
+  bool isValidWord() {
+    List<String> word = tileDestinations.values.map((e) => e ?? ' ').toList();
+
+    /// [" "," ","a","b","c"," ","d"," ",]
+    String finalWord = word.join('');
+
+    /// "  abc d "
+    finalWord = finalWord.trim();
+
+    /// "abc d"
+    if (finalWord.contains(" ")) return false;
+    return words.contains(finalWord);
   }
 
   void shuffleTiles() {
