@@ -30,15 +30,10 @@ class AuthController with ChangeNotifier {
     ],
   );
 
-  final GitHubSignIn gitHubSignIn = GitHubSignIn(
-      clientId: const String.fromEnvironment("GHCLIENT"),
-      clientSecret: const String.fromEnvironment("GHSECRET"),
-      redirectUrl:
-          "https://seldura-firebase-demo.firebaseapp.com/__/auth/handler");
+  final GitHubSignIn gitHubSignIn = GitHubSignIn(clientId: const String.fromEnvironment("GHCLIENT"), clientSecret: const String.fromEnvironment("GHSECRET"), redirectUrl: "https://seldura-firebase-demo.firebaseapp.com/__/auth/handler");
 
   listen() {
-    currentAuthedUser =
-        FirebaseAuth.instance.authStateChanges().listen(handleUserChanges);
+    currentAuthedUser = FirebaseAuth.instance.authStateChanges().listen(handleUserChanges);
   }
 
   void handleUserChanges(User? user) {
@@ -52,14 +47,12 @@ class AuthController with ChangeNotifier {
   }
 
   login(String userName, String password) async {
-    UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: userName, password: password);
+    FirebaseAuth.instance.signInWithEmailAndPassword(email: userName, password: password);
     // User? user  = userCredential.user;
   }
 
   register(String userName, String password) async {
-    UserCredential userCredential = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: userName, password: password);
+    FirebaseAuth.instance.createUserWithEmailAndPassword(email: userName, password: password);
     // User? user  = userCredential.user;
   }
 
@@ -79,8 +72,7 @@ class AuthController with ChangeNotifier {
     if (gitHubSignin.token == null) {
       throw Exception("No Signed in account / token is null");
     }
-    final OAuthCredential credential =
-        GithubAuthProvider.credential(gitHubSignin.token!);
+    final OAuthCredential credential = GithubAuthProvider.credential(gitHubSignin.token!);
     FirebaseAuth.instance.signInWithCredential(credential);
   }
 

@@ -21,11 +21,11 @@ class StatefulParentAndChild extends StatefulWidget {
 class _StatefulParentAndChildState extends State<StatefulParentAndChild> {
   int _parentValue = 0;
 
-  void _incrementParent() {
-    setState(() {
-      _parentValue++;
-    });
-  }
+  // void _incrementParent() {
+  //   setState(() {
+  //     _parentValue++;
+  //   });
+  // }
 
   int x = 4, y = 2;
   num newV = 0;
