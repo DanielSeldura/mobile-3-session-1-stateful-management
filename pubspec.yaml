@@ -43,6 +43,8 @@ dependencies:
   firebase_auth: ^5.1.1
   google_sign_in: ^6.2.1
   github_sign_in_plus: ^0.0.2
+  google_maps_flutter: ^2.7.0
+  geolocator: ^12.0.0
 
 dev_dependencies:
   flutter_test:
@@ -66,10 +68,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+   - assets/map.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

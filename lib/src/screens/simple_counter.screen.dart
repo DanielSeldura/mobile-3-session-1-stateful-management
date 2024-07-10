@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:state_change_demo/src/routing/router.dart';
+import 'package:state_change_demo/src/screens/home/home.screen.dart';
 
 class SimpleCounterScreen extends StatefulWidget {
   /// "simple-counter"
@@ -41,6 +43,12 @@ class _SimpleCounterScreenState extends State<SimpleCounterScreen> {
               '$_counter',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
+            IconButton(
+                onPressed: () {
+
+                  GlobalRouter.I.router.go(HomeScreen.route);
+                },
+                icon: const Icon(Icons.home))
           ],
         ),
       ),

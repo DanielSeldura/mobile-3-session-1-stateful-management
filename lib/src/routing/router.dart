@@ -7,6 +7,7 @@ import "package:state_change_demo/src/controllers/auth_controller.dart";
 import "package:state_change_demo/src/enum/enum.dart";
 import "package:state_change_demo/src/screens/auth/login.screen.dart";
 import "package:state_change_demo/src/screens/auth/registration.screen.dart";
+import "package:state_change_demo/src/screens/google_map_screen/google_map_screen.dart";
 import "package:state_change_demo/src/screens/home/home.screen.dart";
 import "package:state_change_demo/src/screens/home/wrapper.dart";
 import "package:state_change_demo/src/screens/index.screen.dart";
@@ -96,6 +97,13 @@ class GlobalRouter {
                     name: "Wrapped Index",
                     builder: (context, _) {
                       return const IndexScreen();
+                    }),
+                GoRoute(
+                    parentNavigatorKey: _shellNavigatorKey,
+                    path: GoogleMapDemoScreen.route,
+                    name: GoogleMapDemoScreen.name,
+                    builder: (context, _) {
+                      return const GoogleMapDemoScreen();
                     }),
               ],
               builder: (context, state, child) {
