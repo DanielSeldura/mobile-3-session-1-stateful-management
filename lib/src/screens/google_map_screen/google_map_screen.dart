@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:state_change_demo/src/controllers/location_controller.dart';
 import 'package:state_change_demo/src/dialogs/waiting_dialog.dart';
 
 String googleApiKey =
@@ -24,22 +24,64 @@ class _GoogleMapDemoScreenState extends State<GoogleMapDemoScreen> {
     zoom: 14.4746,
   );
 
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  bool canGetPosition = false;
 
   GoogleMapController? mapController;
   String? googleMapStyleString;
-  // loadMapString() async {
-  //   String style =
-  //       await DefaultAssetBundle.of(context).loadString('assets/map.json');
-  //   print(style);
-  //   setState(() {
-  //     googleMapStyleString = style;
-  //   });
-  //   mapController?.getStyleError().then(print);
-  // }
+
+  Map<String, Marker> markersMap = {};
 
   Set<Marker> pinMarkers = {};
+
+  late LocationController locationController;
+
+  @override
+  void initState() {
+    super.initState();
+    locationController = LocationController();
+    locationController.initializePermissions().then((v) {
+      print(v);
+      setState(() {
+        canGetPosition = v;
+      });
+      locationController.getMyCurrentLocationAndListen().then((position) {
+        mapController?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+                target: LatLng(position.latitude, position.longitude),
+                zoom: 16.23),
+          ),
+        );
+      });
+      locationController.currentPosition.addListener(updateCameraAndMarker);
+    });
+  }
+
+  bool followLocationMovements = false;
+
+  updateCameraAndMarker() {
+    print("current position has been updated");
+    if (followLocationMovements) {
+      LatLng me = LatLng(locationController.currentPosition.value.latitude,
+          locationController.currentPosition.value.longitude);
+      markersMap['me'] =
+          Marker(draggable: true, markerId: const MarkerId("me"), position: me);
+      setState(() {
+        pinMarkers = Set.from(markersMap.values);
+      });
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: me, zoom: 16.23),
+        ),
+      );
+    }
+  }
+
+  handleFollowToggle(bool followEnabled) {
+    setState(() {
+      followLocationMovements = followEnabled;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,36 +100,64 @@ class _GoogleMapDemoScreenState extends State<GoogleMapDemoScreen> {
             LatLng center = getCenterPoint(bounds.southwest, bounds.northeast);
             print("Center LatLng: ${center.latitude}, ${center.longitude}");
 
-            pinMarkers.add(
-              Marker(
-                  draggable: true,
-                  markerId: MarkerId(
-                      DateTime.now().millisecondsSinceEpoch.toString()),
-                  position: center),
-            );
-            setState(() {});
+            String unique = DateTime.now().millisecondsSinceEpoch.toString();
+            markersMap[unique] = Marker(
+                draggable: true, markerId: MarkerId(unique), position: center);
+
+            setState(() {
+              pinMarkers = Set.from(markersMap.values);
+            });
           }
         },
       ),
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            GoogleMap(
-              myLocationButtonEnabled: true,
-              myLocationEnabled: true,
-              mapType: MapType.hybrid,
-              initialCameraPosition: _kGooglePlex,
-              style: googleMapStyleString,
-              markers: pinMarkers,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                setState(() {
-                  mapController = controller;
-                });
-                // loadMapString();
-              },
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              height: 52,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Enable follow"),
+                    Switch(
+                        value: followLocationMovements,
+                        onChanged: handleFollowToggle)
+                  ]),
             ),
-            if (mapController == null) const WaitingDialog()
+            Expanded(
+              child: ValueListenableBuilder(
+                  valueListenable: locationController.currentPosition,
+                  builder: (context, position, _) {
+                    return Stack(
+                      children: [
+                        GoogleMap(
+                          myLocationButtonEnabled: false,
+                          myLocationEnabled: false,
+                          mapType: MapType.hybrid,
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                                locationController
+                                    .currentPosition.value.latitude,
+                                locationController
+                                    .currentPosition.value.longitude),
+                            zoom: 10,
+                          ),
+                          style: googleMapStyleString,
+                          markers: pinMarkers,
+                          onMapCreated: (GoogleMapController controller) {
+                            setState(() {
+                              mapController = controller;
+                            });
+                            // loadMapString();
+                          },
+                        ),
+                        if (mapController == null) const WaitingDialog()
+                      ],
+                    );
+                  }),
+            ),
           ],
         ),
       ),
