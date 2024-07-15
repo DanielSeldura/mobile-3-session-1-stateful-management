@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 class StatefulParentAndChild extends StatefulWidget {
@@ -19,11 +21,11 @@ class StatefulParentAndChild extends StatefulWidget {
 class _StatefulParentAndChildState extends State<StatefulParentAndChild> {
   int _parentValue = 0;
 
-  void _incrementParent() {
-    setState(() {
-      _parentValue++;
-    });
-  }
+  // void _incrementParent() {
+  //   setState(() {
+  //     _parentValue++;
+  //   });
+  // }
 
   int x = 4, y = 2;
   num newV = 0;
@@ -56,7 +58,7 @@ class _StatefulParentAndChildState extends State<StatefulParentAndChild> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Parent Value: $newV'),
-            StatefulChild(),
+            const StatefulChild(),
             ElevatedButton(
               onPressed: delayedIncrement,
               //_incrementParent,

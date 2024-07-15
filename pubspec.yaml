@@ -42,10 +42,11 @@ dependencies:
   firebase_core: ^3.1.1
   firebase_auth: ^5.1.1
   google_sign_in: ^6.2.1
-  github_sign_in_plus: ^0.0.2
   image_cropper: ^4.0.1
   firebase_storage: ^12.1.0
   image_picker: ^1.1.2
+  firebase_messaging: ^15.0.3
+  in_app_notification: ^1.1.2
 
 dev_dependencies:
   flutter_test:

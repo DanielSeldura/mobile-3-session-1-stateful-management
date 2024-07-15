@@ -25,6 +25,11 @@ class GlobalRouter {
     GetIt.instance.registerSingleton<GlobalRouter>(GlobalRouter());
   }
 
+  BuildContext? get context {
+    BuildContext? c = router.routerDelegate.navigatorKey.currentContext;
+    return c;
+  }
+
   // Static getter to access the instance through GetIt
   static GlobalRouter get instance => GetIt.instance<GlobalRouter>();
 

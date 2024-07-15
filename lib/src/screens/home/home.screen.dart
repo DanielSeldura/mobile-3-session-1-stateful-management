@@ -6,6 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:state_change_demo/src/controllers/auth_controller.dart';
 import 'package:state_change_demo/src/dialogs/waiting_dialog.dart';
+import 'package:state_change_demo/src/services/information_service.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String route = '/home';
@@ -19,7 +20,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Home"),
+        title: const Text("Home"),
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
@@ -33,10 +34,13 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: const SafeArea(
+      body:  SafeArea(
         child: Center(
           child: Column(
-            children: [Expanded(child: ImageUploadWidget())],
+            children: [Expanded(child: IconButton(onPressed: (){
+
+              Info.showInAppNotification(title: "Sample", content: "Free Dia sa ML");
+            }, icon: const Icon(Icons.info)))],
           ),
         ),
       ),

@@ -163,12 +163,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: const Text("Continue with Google"),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    AuthController.I.signInWithGithub(context);
-                  },
-                  child: const Text("Continue with GitHub"),
-                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     AuthController.I.signInWithGithub(context);
+                //   },
+                //   child: const Text("Continue with GitHub"),
+                // ),
               ],
             ),
           ),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:github_sign_in_plus/github_sign_in_plus.dart';
+// import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:state_change_demo/src/enum/enum.dart';
 
@@ -29,11 +29,11 @@ class AuthController with ChangeNotifier {
     ],
   );
 
-  final GitHubSignIn gitHubSignIn = GitHubSignIn(
-      clientId: const String.fromEnvironment("GHCLIENT"),
-      clientSecret: const String.fromEnvironment("GHSECRET"),
-      redirectUrl:
-          "https://seldura-firebase-demo.firebaseapp.com/__/auth/handler");
+  // final GitHubSignIn gitHubSignIn = GitHubSignIn(
+  //     clientId: const String.fromEnvironment("GHCLIENT"),
+  //     clientSecret: const String.fromEnvironment("GHSECRET"),
+  //     redirectUrl:
+  //         "https://seldura-firebase-demo.firebaseapp.com/__/auth/handler");
 
   listen() {
     currentAuthedUser =
@@ -50,13 +50,13 @@ class AuthController with ChangeNotifier {
   }
 
   login(String userName, String password) async {
-    UserCredential userCredential = await FirebaseAuth.instance
+ FirebaseAuth.instance
         .signInWithEmailAndPassword(email: userName, password: password);
     // User? user  = userCredential.user;
   }
 
   register(String userName, String password) async {
-    UserCredential userCredential = await FirebaseAuth.instance
+    FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: userName, password: password);
     // User? user  = userCredential.user;
   }
@@ -72,15 +72,15 @@ class AuthController with ChangeNotifier {
     FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  signInWithGithub(BuildContext context) async {
-    GitHubSignInResult gitHubSignin = await gitHubSignIn.signIn(context);
-    if (gitHubSignin.token == null) {
-      throw Exception("No Signed in account / token is null");
-    }
-    final OAuthCredential credential =
-        GithubAuthProvider.credential(gitHubSignin.token!);
-    FirebaseAuth.instance.signInWithCredential(credential);
-  }
+  // signInWithGithub(BuildContext context) async {
+  //   GitHubSignInResult gitHubSignin = await gitHubSignIn.signIn(context);
+  //   if (gitHubSignin.token == null) {
+  //     throw Exception("No Signed in account / token is null");
+  //   }
+  //   final OAuthCredential credential =
+  //       GithubAuthProvider.credential(gitHubSignin.token!);
+  //   FirebaseAuth.instance.signInWithCredential(credential);
+  // }
 
   ///write code to log out the user and add it to the home page.
   logout() {
