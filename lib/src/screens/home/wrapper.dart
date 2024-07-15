@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:state_change_demo/src/controllers/cloud_notification_controller.dart';
 import 'package:state_change_demo/src/screens/home/home.screen.dart';
 
 import '../../routing/router.dart';
@@ -15,6 +16,13 @@ class _HomeWrapperState extends State<HomeWrapper> {
   int index = 0;
 
   List<String> routes = [HomeScreen.route, "/index"];
+
+  @override
+  void initState() {
+    super.initState();
+    CloudNotificationController.I.requestPermissionAndListen();
+    CloudNotificationController.I.getIAPToken();
+  }
 
   @override
   Widget build(BuildContext context) {

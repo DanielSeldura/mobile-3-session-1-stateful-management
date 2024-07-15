@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:state_change_demo/src/controllers/auth_controller.dart';
+import 'package:state_change_demo/src/controllers/cloud_notification_controller.dart';
 import 'package:state_change_demo/src/dialogs/waiting_dialog.dart';
 import 'package:state_change_demo/src/services/information_service.dart';
 
@@ -34,13 +35,26 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body:  SafeArea(
+      body: SafeArea(
         child: Center(
           child: Column(
-            children: [Expanded(child: IconButton(onPressed: (){
-
-              Info.showInAppNotification(title: "Sample", content: "Free Dia sa ML");
-            }, icon: const Icon(Icons.info)))],
+            children: [
+              IconButton(
+                onPressed: () {
+                  Info.showInAppNotification(
+                      title: "Sample", content: "Free Dia sa ML");
+                },
+                icon: const Icon(Icons.info),
+              ),
+              ListenableBuilder(
+                  listenable: CloudNotificationController.instance,
+                  builder: (context, _) {
+                    return Switch(
+                        value: CloudNotificationController
+                            .instance.allowInAppNotifications,
+                        onChanged: CloudNotificationController.I.setAllowIAP);
+                  })
+            ],
           ),
         ),
       ),
